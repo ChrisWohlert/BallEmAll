@@ -10,6 +10,7 @@ import Block
 import Ball
 import Bat
 import Debug.Trace
+import System.Random
 
 window :: Display
 window = InWindow "Hello" (1000, 700) (10, 10)
@@ -21,24 +22,18 @@ draw :: Game -> Picture
 draw =  getPicture
 
 main :: IO ()
-main = play window background 60 initialGame draw onEvent onAnimate
-  where
-    onEvent :: Event -> Game -> Game
-    onEvent (EventKey (SpecialKey KeyLeft) Down modifiers (x, y)) (Game blocks bat ball time settings state) = Game blocks (moveLeft bat) ball time settings state
-    onEvent (EventKey (SpecialKey KeyRight) Down modifiers (x, y)) (Game blocks bat ball time settings state) = Game blocks (moveRight bat) ball time settings state
-    onEvent (EventKey (SpecialKey KeyLeft) Up modifiers (x, y)) (Game blocks bat ball time settings state) = Game blocks (stopMovingLeft bat) ball time settings state
-    onEvent (EventKey (SpecialKey KeyRight) Up modifiers (x, y)) (Game blocks bat ball time settings state) = Game blocks (stopMovingRight bat) ball time settings state
-    onEvent _ game = game
-    onAnimate :: Float -> Game -> Game
-    onAnimate t (Game blocks bat Nothing time settings _) = Game blocks bat Nothing time settings GameOver
-    onAnimate t (Game [] bat ball time settings _) = Game [] bat ball time settings GameWon
-    onAnimate t (Game blocks bat (Just ball) time settings state) =
-      if time > 5 then
-        Game
-          (destroyBlock ball blocks)
-          (moveBat settings bat)
-          ((destroyBall . moveBall . moveAngle (map toBlock blocks) bat . splitBall blocks) ball)
-          (time + t)
-          settings
-          state
-      else Game blocks bat (Just ball) (time + t) settings state
+main = do
+  rand <- newRand
+  play window background 60 (initialGame (map abs $ randomList rand)) draw onEvent onAnimate
+    where
+      onEvent :: Event -> Game -> Game
+      onEvent (EventKey (SpecialKey KeyLeft) Down modifiers (x, y)) (Game blocks bat ball time settings state dbs) = Game blocks (moveLeft bat) ball time settings state dbs
+      onEvent (EventKey (SpecialKey KeyRight) Down modifiers (x, y)) (Game blocks bat ball time settings state dbs) = Game blocks (moveRight bat) ball time settings state dbs
+      onEvent (EventKey (SpecialKey KeyLeft) Up modifiers (x, y)) (Game blocks bat ball time settings state dbs) = Game blocks (stopMovingLeft bat) ball time settings state dbs
+      onEvent (EventKey (SpecialKey KeyRight) Up modifiers (x, y)) (Game blocks bat ball time settings state dbs) = Game blocks (stopMovingRight bat) ball time settings state dbs
+      onEvent _ game = game
+      onAnimate :: Float -> Game -> Game
+      onAnimate = updateGame
+
+newRand = randomIO :: IO Int
+randomList seed = randoms (mkStdGen seed) :: [Int]

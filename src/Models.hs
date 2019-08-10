@@ -7,37 +7,54 @@ type Width = Float
 
 data Shape = Box Width Height | Sphere Width deriving (Show, Eq)
 
-data PowerUp = BallPowerUp (Ball -> Ball)
+data BlockPowerUp = BlockBallPowerUp (Ball -> Ball) | BlockBatPowerUp (Bat -> Bat)
+
+data BallPowerUp = MultiBall [Ball]
+                 | FireBall Float [Block]
+                 deriving (Show, Eq)
 
 data Block = Block { blockShape :: Shape
                    , blockPosition :: Position
+                   , blockPowerUp :: Maybe BlockPowerUp
                    }
-                   | PowerUpBlock PowerUp Block
 
-data BatDirection = MovingLeft | NotMoving | MovingRight deriving (Show)
+data BatDirection = MovingLeft | NotMoving | MovingRight deriving (Show, Eq)
 
 data Bat = Bat { batShape :: Shape
                , batPosition :: Position
                , batDirection :: BatDirection
-               } deriving (Show)
+               } deriving (Show, Eq)
 
-data CollisionTarget = CollisionTop | CollisionBottom | CollisionLeft | CollisionRight
+data Collision = CollisionTop
+               | CollisionBottom
+               | CollisionLeft
+               | CollisionRight
+               deriving (Show, Eq)
 
-data Collision = NotColliding | Colliding CollisionTarget
+data BlockCollision = BlockCollision Collision Block deriving (Show, Eq)
+
+data BatCollision = BatCollision Collision Bat deriving (Show, Eq)
+
+newtype WallCollision = WallCollision Collision deriving (Show, Eq)
 
 data Ball = Ball { ballShape :: Shape
                  , ballPosition :: Position
                  , ballSpeedX :: Float
                  , ballSpeedY :: Float
-                 }
-                 | MultiBall [Ball]
-                 | FireBall Ball Float deriving (Show, Eq)
+                 , ballBlockCollisions :: Maybe BlockCollision
+                 , ballBatCollision :: Maybe BatCollision
+                 , ballWallCollision :: Maybe WallCollision
+                 , ballPowerUp :: Maybe BallPowerUp
+                 } deriving (Show, Eq)
 
 data GameSettings = GameSettings { windowWidth :: Float
                                  , windowHeight :: Float
+                                 , gameSeed :: [Int]
                                  } deriving (Show)
 
 data GameState = GameRunning | GameWon | GameOver deriving (Show)
+
+data Score = Score Int
 
 data Game = Game { blocks :: [Block]
                  , bat :: Bat
@@ -45,14 +62,11 @@ data Game = Game { blocks :: [Block]
                  , time :: Float
                  , settings :: GameSettings
                  , gameState :: GameState
+                 , destroyedBlocks :: [Block]
                  } deriving (Show)
 
 instance Eq Block where
-  (Block shape pos) == (Block shape2 pos2) = shape == shape2 && pos == pos2
-  (PowerUpBlock _ block) == (PowerUpBlock _ block2) = block == block2
-  (PowerUpBlock _ block) == block2 = block == block2
-  block == (PowerUpBlock _ block2) = block == block2
+  (Block shape pos _) == (Block shape2 pos2 _) = shape == shape2 && pos == pos2
 
 instance Show Block where
-  show (PowerUpBlock _ block) = show block
-  show (Block shape pos) = show shape ++ " " ++ show pos
+  show (Block shape pos _) = show shape ++ " " ++ show pos
