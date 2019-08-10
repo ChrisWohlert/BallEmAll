@@ -32,4 +32,4 @@ instance Drawable Score where
   getPicture (Score x) = translate 10 10 $ scale 0.2 0.2 $ Text (show x)
 
 instance Drawable Game where
-  getPicture (Game bs bat ball time settings gameState dbs) = translate (-500) (-350) $ pictures $ reverse $ getPicture (gameScore dbs time) : getPicture gameState : getPicture bat : getPicture ball : map getPicture bs
+  getPicture (Game bs bat ball time settings gameState dbs _) = translate (-500) (-350) $ pictures $ reverse $ getPicture (gameScore dbs time) : getPicture gameState : getPicture bat : getPicture ball : map getPicture bs

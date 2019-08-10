@@ -49,7 +49,6 @@ data Ball = Ball { ballShape :: Shape
 
 data GameSettings = GameSettings { windowWidth :: Float
                                  , windowHeight :: Float
-                                 , gameSeed :: [Int]
                                  } deriving (Show)
 
 data GameState = GameRunning | GameWon | GameOver deriving (Show)
@@ -63,7 +62,10 @@ data Game = Game { blocks :: [Block]
                  , settings :: GameSettings
                  , gameState :: GameState
                  , destroyedBlocks :: [Block]
+                 , history :: [Game]
                  } deriving (Show)
+
+data Replay = Replay { replayBatPositions :: [Position], replayGame :: Game }
 
 instance Eq Block where
   (Block shape pos _) == (Block shape2 pos2 _) = shape == shape2 && pos == pos2

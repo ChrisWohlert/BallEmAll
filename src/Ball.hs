@@ -50,7 +50,7 @@ ballMoveDown (Ball shape pos vx vy bc batc wc pu) = Ball shape pos vx (-1 * abs 
 ballMoveUp (Ball shape pos vx vy bc batc wc pu) = Ball shape pos vx (abs vy) bc batc wc pu
 
 addTilt :: Bat -> Ball -> Ball
-addTilt (Bat (Box w h) (x, y) _) (Ball shape (ballX, ballY) vx vy bc batc wc pu) = Ball shape (ballX, ballY) ((if x < ballX then (-) else (+)) vx ((x - ballX - w) / (w / 2))) vy bc batc wc pu
+addTilt (Bat (Box w h) (x, y) _) (Ball shape (ballX, ballY) vx vy bc batc wc pu) = Ball shape (ballX, ballY) ((if x < ballX then (-) else (+)) vx ((x - ballX - w) / (w / 3))) vy bc batc wc pu
 
 powerUp :: Ball -> Ball
 powerUp ball = case ball of

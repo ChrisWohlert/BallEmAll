@@ -24,7 +24,7 @@ stopMovingRight d = d
 
 moveBat :: GameSettings -> Bat -> Bat
 moveBat _ (Bat (Box boxW boxH) (x, y) MovingLeft) = Bat (Box boxW boxH) (if x - boxW / 2 > 0 then x - 10 else x, y) MovingLeft
-moveBat (GameSettings w h _) (Bat (Box boxW boxH) (x, y) MovingRight) = Bat (Box boxW boxH) (if x + boxW / 2 < w then x + 10 else x, y) MovingRight
+moveBat (GameSettings w h) (Bat (Box boxW boxH) (x, y) MovingRight) = Bat (Box boxW boxH) (if x + boxW / 2 < w then x + 10 else x, y) MovingRight
 moveBat _ bat = bat
 
 onBatLoop :: Bat -> Bat
