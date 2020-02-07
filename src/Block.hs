@@ -4,7 +4,6 @@ module Block ( getBlocks
 import Models
 import Collision
 import Data.List
-import Debug.Trace
 import Ball
 
 getBlocks :: Int -> Float -> Float -> Float -> [Block]
@@ -25,7 +24,7 @@ getBlocks seed width height floor = zipWith makePowerUpBlock
       | i `mod` 54 == 0 = Block shape pos $ Just $ BlockBallPowerUp makeNewBalls
       | i `mod` 38 == 0 = Block shape pos $ Just $ BlockBallPowerUp speedUp
       | i `mod` 35 == 0 = Block shape pos $ Just $ BlockBatPowerUp widenBat
-      | otherwise = trace (show i) Block shape pos pu
+      | otherwise = Block shape pos pu
         where
           makeNewFireBall (Ball shape pos vx vy bc batc wc (Just (FireBall r bs))) = updatePowerUp (Just (FireBall (maximum [r + 20, 50]) [])) (Ball shape pos vx vy bc batc wc (Just (FireBall r bs)))
           makeNewFireBall ball = updatePowerUp (Just (FireBall 50 [])) ball

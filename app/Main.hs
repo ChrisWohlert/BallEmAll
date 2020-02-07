@@ -9,7 +9,6 @@ import Models
 import Block
 import Ball
 import Bat
-import Debug.Trace
 import System.IO
 import Graphics.Gloss.Interface.IO.Game
 import Control.Concurrent.Async

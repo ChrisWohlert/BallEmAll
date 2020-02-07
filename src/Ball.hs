@@ -12,7 +12,6 @@ module Ball ( moveBall
 import Models
 import Data.Maybe
 import Collision
-import Debug.Trace
 import Data.List
 import Data.Monoid
 import Util
@@ -54,7 +53,7 @@ addTilt (Bat (Box w h) (x, y) _) (Ball shape (ballX, ballY) vx vy bc batc wc pu)
 
 powerUp :: Ball -> Ball
 powerUp ball = case ball of
-                    (Ball _ _ _ _ (Just (BlockCollision _ (Block _ _ (Just (BlockBallPowerUp f))))) _ _ _) -> trace "Hit ball powerup" f ball
+                    (Ball _ _ _ _ (Just (BlockCollision _ (Block _ _ (Just (BlockBallPowerUp f))))) _ _ _) -> f ball
                     _ -> ball
 
 destroyBall :: Ball -> Maybe Ball

@@ -3,7 +3,6 @@ module Collision ( collidesWithBat
                  , collidesWithWall
                  , collisionsWithBlock) where
 
-import Debug.Trace
 import Models
 import Util
 

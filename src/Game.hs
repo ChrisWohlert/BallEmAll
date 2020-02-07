@@ -1,7 +1,6 @@
 module Game where
 
 import Data.List
-import Debug.Trace
 import Data.Fixed
 import Models
 import Block
